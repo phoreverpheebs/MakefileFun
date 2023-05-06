@@ -1,5 +1,6 @@
 #!/usr/bin/make -qrRf
 
+# the null of the base is assumed at $(firstword $(NUMBERS))
 NUMBERS = 0 1 2 3 4 5 6 7 8 9
 
 popdel = $(strip $(subst /, ,$(dir /$(subst $() ,/,$(strip $1)))))
@@ -20,7 +21,13 @@ dec = $(let t,$(call sepnums,$1),$(intcmp $(words $t),1,,$(intcmp $t,$(word 1,$(
 inc_recurse = $(call inc,$(call popdel,$t))$(firstword $(NUMBERS))
 
 inc = $(let t,$(call sepnums,$1),$(let nums,$(wordlist 3,$(words $(NUMBERS)),$(NUMBERS)),$(if $t,$(intcmp $(lastword $t),$(lastword $(NUMBERS)),$\
-	  $(subst $() ,,$(call popdel,$t))$(intcmp $(lastword $t),$(firstword $(NUMBERS)),,$(word 2,$(NUMBERS)),$(word $(lastword $t),$(nums))),$(call inc_recurse,$t),),$(word 2,$(NUMBERS)))))
+	  $(subst $() ,,$(call popdel,$t))$(intcmp $(lastword $t),$(firstword $(NUMBERS)),,$(word 2,$(NUMBERS)),$(word $(lastword $t),$(nums))),$\
+	  $(call inc_recurse,$t),),$(word 2,$(NUMBERS)))))
+
+# $1 + $2
+add = $(if $(and $1,$2),$(intcmp $2,$(firstword $(NUMBERS)),$(error added value can't be less than the null value of NUMBERS),$\
+	  $1,$(let t,$(call dec,$2),$(intcmp $t,$(firstword $(NUMBERS)),,$(call inc,$1),$\
+	  $(call add,$(call inc,$1),$t)))),$(if $1,$1,$(if $2,$2)))
 
 dec_zero_warning = $(warning attempt to decrement zero)
 
@@ -39,6 +46,11 @@ $(info $(call inc,7232))
 $(info $(call inc,4123804))
 $(info $(call inc,528305253509))
 $(info $(call inc,9999999999999999))
+$(info $())
+
+$(info addition;)
+$(info $(call add,5,5))
+$(info $(call add,580235,359))
 
 .PHONY: all
 all:
