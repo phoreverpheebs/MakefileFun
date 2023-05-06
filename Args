@@ -1,0 +1,17 @@
+#!/usr/bin/make -qrRf
+
+# TODO: implement a while loop that increments
+# the argument number while it's still yielding
+# a result
+__VA_ARGS__ = $1 $2 $3 $4 $5 $6 $7 $8 $9 $(10)
+func = $(__VA_ARGS__)
+
+# call sets $# to all values after the function
+# name; since Make doesn't expose variadic arguments
+# we can pseudo-implement them with our very own
+# __VA_ARGS__ variable
+$(info $(call func,1,2))
+$(info $(call func,1,2,3))
+$(info $(call func,1,2,3,4))
+$(info $(call func,1,2,3,4,5,6,7,8,9))
+$(info $(call func,1,2,3,4,5,6,7,8,9,10))
