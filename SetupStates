@@ -1,0 +1,36 @@
+#!/usr/bin/make -qrf
+
+BLANK = $() #
+base_transitions = 00:00R,01:01R,0$(BLANK):1$(BLANK)L,10:f1N,11:10L,1$(BLANK):f$(BLANK)N
+
+characters = _ Z Y X W V U T S R \
+			 Q P O N M L K J I H \
+			 G F E D C B A z y x \
+			 w v u t s r q p o n \
+			 m l k j i h g f e d \
+			 c b a 9 8 7 6 5 4 3 2 1 0
+
+reverse = $(let a b,$1,$(if $b,$(call reverse,$b) $a,$a))
+
+popdel = $(strip $(subst /, ,$(dir /$(subst $() ,/,$1))))
+strsep_first = $(let t,$(filter-out $1,$(foreach s,$2,$\
+			   $(patsubst $s%,$s %,$(lastword $1)))),$(if $t,$t,$1))
+strsep = $(let t,$(call popdel,$1) $(call strsep_first,$(lastword $1),$2),$\
+		 $(intcmp $(words $1),$(words $t),$(call strsep,$t,$2),$(strip $t)))
+
+COMMA = ,
+
+spaceas_ = $(subst $(BLANK),_,$1)
+
+template_err = $(error transition part $(value 1) requires $(value 2) characters)
+
+# line 4 creates variables DELTA_% and targets TRANS_%
+make_transitions = $(foreach trans_tmp,$(subst $(COMMA),$(BLANK),$(call spaceas_,$1)),$(let trans,$(subst :,$(BLANK),$(trans_tmp)),$\
+	$(let s1,$(call strsep,$(word 1,$(trans)),$(characters)),$(intcmp $(words $(s1)),2,$(call template_err,1,2),$\
+	$(let s2,$(call strsep,$(word 2,$(trans)),$(characters)),$(intcmp $(words $(s2)),3,$(call template_err,2,3),$\
+	$(eval DELTA_$(word 1,$(trans)) ?= $(word 2,$(trans)))$(eval TRANS_$(word 1,$(trans)): $\
+	$$(info $$(DELTA_$(word 1,$(trans)))))TRANS_$(word 1,$(trans)),$(call template_err,2,3))),$(call template_err,1,2)))))
+
+
+.PHONY: all
+all: $(call make_transitions,$(base_transitions))

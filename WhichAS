@@ -1,0 +1,12 @@
+#!/usr/bin/make -f 
+
+NAMES = base
+
+AS_i386 	:= i386-elf-as
+AS_x86_64 	:= x64_64-linux-gnu-as
+AS_aarch64 	:= aarch64-linux-gnu-as
+AS_arm 		:= arm-none-eabi-as
+
+a = $(shell as --version)
+AS_$(subst `,,$(word 1,$(subst -, ,$(word $(words $a),$a)))) = as
+$(info $(subst $() $(),_,$(filter-out $(NAMES),$(subst _, ,base_x86_64))))

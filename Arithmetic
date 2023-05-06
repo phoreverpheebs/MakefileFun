@@ -1,0 +1,31 @@
+#!/usr/bin/make -qrRf
+
+NUMBERS = 0 1 2 3 4 5 6 7 8 9
+
+popdel = $(strip $(subst /, ,$(dir /$(subst $() ,/,$(strip $1)))))
+strsep_first = $(let t,$(filter-out $1,$(foreach s,$2,$\
+			   $(patsubst $s%,$s %,$(lastword $1)))),$(if $t,$t,$1))
+strsep = $(let t,$(call popdel,$1) $(call strsep_first,$(lastword $1),$2),$\
+		 $(intcmp $(words $1),$(words $t),$(call strsep,$t,$2),$(strip $t)))
+
+sepnums = $(call strsep,$1,$(NUMBERS))
+
+# don't simply write 9 to allow for other bases
+dec_leading_zero = $(call dec,$(call popdel,$t))$(lastword $(NUMBERS))
+
+# $1 is the value to decrement and $2 is the handler of 0 (no arguments)
+dec = $(let t,$(call sepnums,$1),$(intcmp $(words $t),1,,$(intcmp $t,$(word 1,$(NUMBERS)),,$(if $2,$(call $2),),$(word $1,$(NUMBERS))),$\
+	  $(intcmp $(lastword $t),$(word 1,$(NUMBERS)),,$(call dec_leading_zero,$t),$(subst $() ,,$(call popdel,$t))$(call dec,$(lastword $t)))))
+
+dec_zero_warning = $(warning attempt to decrement zero)
+
+$(info $(call dec,5))
+$(info $(call dec,9))
+$(info $(call dec,10429))
+$(info $(call dec,28305420))
+$(info $(call dec,100000000))
+$(info $(call dec,5283050284))
+$(info $(call dec,0,dec_zero_warning))
+
+.PHONY: all
+all:
