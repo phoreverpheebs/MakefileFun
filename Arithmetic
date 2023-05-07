@@ -1,7 +1,9 @@
 #!/usr/bin/make -qrRf
 
+FILENAME := $(lastword $(MAKEFILE_LIST))
+
 # the null of the base is assumed at $(firstword $(NUMBERS))
-NUMBERS = 0 1 2 3 4 5 6 7 8 9
+NUMBERS ?= 0 1 2 3 4 5 6 7 8 9
 
 popdel = $(strip $(subst /, ,$(dir /$(subst $() ,/,$(strip $1)))))
 strsep_first = $(let t,$(filter-out $1,$(foreach s,$2,$\
@@ -29,28 +31,34 @@ add = $(if $(and $1,$2),$(intcmp $2,$(firstword $(NUMBERS)),$(error added value 
 	  $1,$(let t,$(call dec,$2),$(intcmp $t,$(firstword $(NUMBERS)),,$(call inc,$1),$\
 	  $(call add,$(call inc,$1),$t)))),$(if $1,$1,$(if $2,$2)))
 
+# $1 - $2
+sub = $(if $(and $1,$2),$(intcmp $1,$2,-$(call sub,$2,$1),$(firstword $(NUMBERS)),$(for)),$(if $1,$1,$(if $2,-$2)))
+
 dec_zero_warning = $(warning attempt to decrement zero)
-
-$(info decrement;)
-$(info $(call dec,5))
-$(info $(call dec,9))
-$(info $(call dec,10429))
-$(info $(call dec,28305420))
-$(info $(call dec,100000000))
-$(info $(call dec,5283050284))
-$(info $(call dec,0,dec_zero_warning))
-
-$(info increment;)
-$(info $(call inc,0))
-$(info $(call inc,7232))
-$(info $(call inc,4123804))
-$(info $(call inc,528305253509))
-$(info $(call inc,9999999999999999))
-$(info $())
-
-$(info addition;)
-$(info $(call add,5,5))
-$(info $(call add,580235,359))
 
 .PHONY: all
 all:
+ifeq ($(firstword $(MAKEFILE_LIST)),$(FILENAME))
+	$(info decrement;)
+	$(info $(call dec,5))
+	$(info $(call dec,9))
+	$(info $(call dec,10429))
+	$(info $(call dec,28305420))
+	$(info $(call dec,100000000))
+	$(info $(call dec,5283050284))
+	$(info $(call dec,0,dec_zero_warning))
+
+	$(info increment;)
+	$(info $(call inc,0))
+	$(info $(call inc,7232))
+	$(info $(call inc,4123804))
+	$(info $(call inc,528305253509))
+	$(info $(call inc,9999999999999999))
+	$(info $())
+
+	$(info addition;)
+	$(info $(call add,5,5))
+	$(info $(call add,72,85))
+	$(info $(call add,580235,359))
+endif
+

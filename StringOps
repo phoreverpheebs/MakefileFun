@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+FILENAME := $(lastword $(MAKEFILE_LIST))
+
 ALP = 1 0
 STR1 = 100101010010110010001010
 STR2 = 100 101 001 011 001 000 100
@@ -19,8 +21,11 @@ all_but_last_err = $(if $(findstring /,$1),$(error string can't contain /),$(cal
 # substituting / as _
 all_but_last_sub = $(subst _,/,$(call all_but_last,$(subst /,_,$1)))
 
-$(info $(call seperate,$(STR1),$(ALP)))
+all:
+ifeq ($(firstword $(MAKEFILE_LIST)),$(FILENAME))
+	$(info $(call seperate,$(STR1),$(ALP)))
 
-$(info $(call all_but_last,$(STR2)))
-$(info $(call all_but_last_sub,$(STR3)))
-$(info $(call all_but_last_err,$(STR3)))
+	$(info $(call all_but_last,$(STR2)))
+	$(info $(call all_but_last_sub,$(STR3)))
+	$(info $(call all_but_last_err,$(STR3)))
+endif
