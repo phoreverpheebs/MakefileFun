@@ -1,8 +1,12 @@
 #!/usr/bin/make -f
 
-FILENAME := $(lastword $(MAKEFILE_LIST))
+CHARACTERS = _ Z Y X W V U T S R \
+			 Q P O N M L K J I H \
+			 G F E D C B A z y x \
+			 w v u t s r q p o n \
+			 m l k j i h g f e d \
+			 c b a 9 8 7 6 5 4 3 2 1 0
 
-ALP = 1 0
 STR1 = 100101010010110010001010
 STR2 = 100 101 001 011 001 000 100
 STR3 = 100 101 001/011 001 000 101
@@ -21,9 +25,10 @@ all_but_last_err = $(if $(findstring /,$1),$(error string can't contain /),$(cal
 # substituting / as _
 all_but_last_sub = $(subst _,/,$(call all_but_last,$(subst /,_,$1)))
 
+.PHONY: all
 all:
-ifeq ($(firstword $(MAKEFILE_LIST)),$(FILENAME))
-	$(info $(call seperate,$(STR1),$(ALP)))
+ifeq ($(firstword $(MAKEFILE_LIST)),Strings)
+	$(info $(call seperate,$(STR1),$(CHARACTERS)))
 
 	$(info $(call all_but_last,$(STR2)))
 	$(info $(call all_but_last_sub,$(STR3)))

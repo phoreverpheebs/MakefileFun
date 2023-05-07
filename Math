@@ -1,7 +1,5 @@
 #!/usr/bin/make -qrRf
 
-FILENAME := $(lastword $(MAKEFILE_LIST))
-
 # the null of the base is assumed at $(firstword $(NUMBERS))
 NUMBERS ?= 0 1 2 3 4 5 6 7 8 9
 
@@ -38,7 +36,7 @@ dec_zero_warning = $(warning attempt to decrement zero)
 
 .PHONY: all
 all:
-ifeq ($(firstword $(MAKEFILE_LIST)),$(FILENAME))
+ifeq ($(firstword $(MAKEFILE_LIST)),Math)
 	$(info decrement;)
 	$(info $(call dec,5))
 	$(info $(call dec,9))
