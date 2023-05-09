@@ -1,5 +1,8 @@
 # Makefiles are fun
 
+*Note:* it turns out someone has already done most of this stuff in pure Make; the GNU Make
+Standard Library can be found [here](https://github.com/jgrahamc/gmsl).
+
 As I work on implementing a Turing machine in GNU's Make, I've been making little test files
 to work with and so why not put it into a seperate repository from the Turing machine.
 
