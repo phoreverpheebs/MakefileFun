@@ -1,0 +1,30 @@
+#!/usr/bin/make -qrRf
+
+# Integer comparisons ---=
+
+# less than
+lt = $(intcmp $1,$2,a,,)
+# less than or equal
+le = $(intcmp $1,$2,a,a,)
+# equal
+eq = $(intcmp $1,$2,,a,)
+# greater than
+gt = $(intcmp $1,$2,,,a)
+# greater than or equal
+ge = $(intcmp $1,$2,,a,a)
+
+
+all:
+ifeq ($(firstword $(MAKEFILE_LIST)),Comparisons)
+	$(eval resolve_bool = $$(if $$1,true,false))
+	$(info $(call resolve_bool,$(call lt,5,5)) false)
+	$(info $(call resolve_bool,$(call lt,2,5)) true)
+	$(info $(call resolve_bool,$(call le,3,5)) true)
+	$(info $(call resolve_bool,$(call le,11,11)) true)
+	$(info $(call resolve_bool,$(call gt,11,5)) true)
+	$(info $(call resolve_bool,$(call ge,5,5)) true)
+	$(info $(call resolve_bool,$(call ge,18,5)) true)
+	$(info $(call resolve_bool,$(call eq,18,5)) false)
+	$(info $(call resolve_bool,$(call eq,19,19)) true)
+	$(info $(call resolve_bool,$(call eq,523805,523804)) false)
+endif
