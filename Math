@@ -24,6 +24,9 @@ inc = $(let t,$(call sepnums,$1),$(let nums,$(wordlist 3,$(words $(NUMBERS)),$(N
 	  $(subst $() ,,$(call popdel,$t))$(intcmp $(lastword $t),$(firstword $(NUMBERS)),,$(word 2,$(NUMBERS)),$(word $(lastword $t),$(nums))),$\
 	  $(call inc_recurse,$t),),$(word 2,$(NUMBERS)))))
 
+# in-place increment
+++ = $(eval $1=$$(call inc,$($1)))$($1)
+
 # $1 + $2
 add = $(if $(and $1,$2),$(intcmp $2,$(firstword $(NUMBERS)),$(error added value can't be less than the null value of NUMBERS),$\
 	  $1,$(let t,$(call dec,$2),$(intcmp $t,$(firstword $(NUMBERS)),,$(call inc,$1),$\
