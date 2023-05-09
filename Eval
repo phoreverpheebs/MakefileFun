@@ -1,0 +1,31 @@
+#!/usr/bin/make -qrRf
+
+include Strings
+
+DOLLAR := $$
+LPAREN := (
+RPAREN := )
+COMMA := ,
+
+CHAR_COPY = $(CHARACTERS)
+CHAR_COPY += $(DOLLAR) $(LPAREN)
+
+is_var_def = $(let t,$(call seperate,$1,$(CHAR_COPY)),$(if $(and $(findstring $(firstword $t),$(DOLLAR)),$(findstring $(word 2,$t),$(LPAREN)),$(findstring $(lastword $t),$(RPAREN))),a,$()))
+
+var_def_macro = $(if $(is_var_def),variable definition,not a variable definition)
+
+# What we're looking to do is implement a functional paradigm
+function_builder = $(eval $1=$2)
+run_lambda = $(call function_builder,run_lambda_temp,$1)$(run_lambda_temp)
+
+VARDEF := $$(DOLLAR)
+NOTDEF := $(DOLLAR)
+
+all:
+ifeq ($(firstword $(MAKEFILE_LIST)),Eval)
+	$(call function_builder,do,$$(call var_def_macro,$$(VARDEF)))
+	$(info $(do))
+	$(info $(call run_lambda,$$(call var_def_macro,$$(VARDEF))))
+	$(info $(VARDEF) => $(call var_def_macro,$(VARDEF)))
+	$(info $(NOTDEF) => $(call var_def_macro,$(NOTDEF)))
+endif
