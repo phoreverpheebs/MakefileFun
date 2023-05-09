@@ -6,6 +6,7 @@ to work with and so why not put it into a seperate repository from the Turing ma
 The names of the files should be fairly self-explanatory:
 
 * `Args` => experiments with how Make handles arguments
+* `Eval` => evaluating expressions at runtime and functional programming
 * `Math` => implementing basic arithmetic operations in Make
 * `SetupStates` => parse a user input into transition tables (for use with the Turing machine)
 * `Strings` => basic string operations
