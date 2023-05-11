@@ -1,0 +1,73 @@
+#!/usr/bin/make -qrRf
+
+include Args Comparisons Loops Math Strings
+
+# Strings ><>
+
+STR1 = 100101010010110010001010
+STR2 = 100 101 001 011 001 000 100
+STR3 = 100 101 001/011 001 000 101
+
+all:
+	$(info $(call seperate,$(STR1),$(CHARACTERS)))
+	$(info $(call all_but_last,$(STR2)))
+	$(info $(call all_but_last_sub,$(STR3)))
+
+# <><
+
+# Math ><>
+
+	$(info decrement;)
+	$(info $(call dec,5))
+	$(info $(call dec,9))
+	$(info $(call dec,10429))
+	$(info $(call dec,28305420))
+	$(info $(call dec,100000000))
+	$(info $(call dec,5283050284))
+	$(info $(call dec,0,dec_zero_warning))
+
+	$(info increment;)
+	$(info $(call inc,0))
+	$(info $(call inc,7232))
+	$(info $(call inc,4123804))
+	$(info $(call inc,528305253509))
+	$(info $(call inc,9999999999999999))
+	$(info $())
+
+	$(info addition;)
+	$(info $(call add,5,5))
+	$(info $(call add,72,85))
+	$(info $(call add,580235,359))
+
+# <><
+
+# Loops ><>
+
+	$(eval i:=0)$(call while,$$(call lt,$$(call ++,i),5),$$(info $$i))
+
+# <><
+
+# Comparisons ><>
+
+	$(eval handle = $$(if $$1,true,false))
+	$(info $(call handle,$(call lt,5,5)) == false)
+	$(info $(call handle,$(call lt,2,5)) == true)
+	$(info $(call handle,$(call le,3,5)) == true)
+	$(info $(call handle,$(call le,11,11)) == true)
+	$(info $(call handle,$(call gt,11,5)) == true)
+	$(info $(call handle,$(call ge,5,5)) == true)
+	$(info $(call handle,$(call ge,18,5)) == true)
+	$(info $(call handle,$(call eq,18,5)) == false)
+	$(info $(call handle,$(call eq,19,19)) == true)
+	$(info $(call handle,$(call eq,523805,523804)) == false)
+	$(info $(call handle,$(call streq,haii,haii)) == true)
+	$(info $(call handle,$(call streq,heya,haii)) == false)
+	$(info $(call handle,$(call streq,foo,bar)) == false)
+	$(info $(call handle,$(call streq,foobar,bar)) == false)
+	$(info $(call handle,$(call streq,foo,foobar)) == false)
+	$(info $(call handle,$(call streq,foobar,foobar)) == true)
+	$(eval undefine handle)
+
+# <><
+
+# vim:foldmethod=marker:fmr=><>,<><
