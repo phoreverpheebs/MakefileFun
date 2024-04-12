@@ -2,14 +2,19 @@
 
 include Args Comparisons Loops Math Strings
 
-# Strings ><>
+# Declarations ><>
 
 STR1 = 100101010010110010001010
 STR2 = 100 101 001 011 001 000 100
 STR3 = 100 101 001/011 001 000 101
 
+# <><
+
 all:
-	$(info $(call seperate,$(STR1),$(CHARACTERS)))
+
+# Strings ><>
+
+	$(info $(call separate,$(STR1),$(CHARACTERS)))
 	$(info $(call all_but_last,$(STR2)))
 	$(info $(call all_but_last_sub,$(STR3)))
 

@@ -1,23 +1,51 @@
 #!/usr/bin/make -f
 
-CHARACTERS = _ Z Y X W V U T S R \
-			 Q P O N M L K J I H \
-			 G F E D C B A z y x \
-			 w v u t s r q p o n \
-			 m l k j i h g f e d \
-			 c b a 9 8 7 6 5 4 3 2 1 0
+# Character Groups ><>
 
-STR1 = 100101010010110010001010
-STR2 = 100 101 001 011 001 000 100
-STR3 = 100 101 001/011 001 000 101
+# blank is not included in characters, as it is a separator
+DIGITS = 0 1 2 3 4 5 6 7 8 9
+
+LOWERCASE_LETTERS = a b c d e f g h \
+					i j k l m n o p \
+					q r s t u v w x \
+					y z
+
+UPPERCASE_LETTERS = A B C D E F G H \
+					I J K L M N O P \
+					Q R S T U V W X \
+					Y Z
+
+HEXADECIMAL_DIGITS = $(DIGITS) $(wordlist 1,6,$(LOWERCASE_LETTERS))
+
+LETTERS = $(LOWERCASE_LETTERS) $(UPPERCASE_LETTERS)
+
+ALPHANUMERIC_CHARACTERS = $(DIGITS) $(LETTERS)
+
+PUNCTUATION = ! " $# $$ % & ' ( ) * \
+			  + , - . / : ; < = > ? \
+			  @ [ \ ] ^ _ $` { | } ~
+
+PRINTABLE_CHARACTERS = $(ALPHANUMERIC_CHARACTERS) $(PUNCTUATION)
+
+BLANK = $() #
+HORIZONTAL_TAB = $()	#
+VERTICAL_TAB = $()#
+
+define NEWLINE :=
+
+
+endef
+
+SPACE_CHARACTERS = $(BLANK) $(NEWLINE) $(HORIZONTAL_TAB) $(VERTICAL_TAB)
+
+# <><
 
 # dir method of getting array without last element
 all_but_last = $(strip $(subst /, ,$(dir /$(subst $() ,/,$(strip $1)))))
-
-seperate_first = $(let t,$(filter-out $1,$(foreach s,$2,$(patsubst $s%,$s %,$\
+separate_first = $(let t,$(filter-out $1,$(foreach s,$2,$(patsubst $s%,$s %,$\
 				 $(lastword $1)))),$(if $t,$t,$1))
-seperate = $(let t,$(call all_but_last,$1) $(call seperate_first,$(lastword $1),$2),$\
-		   $(intcmp $(words $1),$(words $t),$(call seperate,$t,$2),$(strip $t)))
+separate = $(let t,$(call all_but_last,$1) $(call separate_first,$(lastword $1),$2),$\
+		   $(intcmp $(words $1),$(words $t),$(call separate,$t,$2),$(strip $t)))
 
 # a variant that errors:
 all_but_last_err = $(if $(findstring /,$1),$(error string can't contain /),$(call all_but_last,$1))
@@ -25,12 +53,4 @@ all_but_last_err = $(if $(findstring /,$1),$(error string can't contain /),$(cal
 # substituting / as _
 all_but_last_sub = $(subst _,/,$(call all_but_last,$(subst /,_,$1)))
 
-.PHONY: all
-all:
-ifeq ($(firstword $(MAKEFILE_LIST)),Strings)
-	$(info $(call seperate,$(STR1),$(CHARACTERS)))
-
-	$(info $(call all_but_last,$(STR2)))
-	$(info $(call all_but_last_sub,$(STR3)))
-	$(info $(call all_but_last_err,$(STR3)))
-endif
+# vim:foldmethod=marker:fmr=><>,<><

@@ -10,7 +10,7 @@ COMMA := ,
 CHAR_COPY = $(CHARACTERS)
 CHAR_COPY += $(DOLLAR) $(LPAREN)
 
-is_var_def = $(let t,$(call seperate,$1,$(CHAR_COPY)),$(if $(and $(findstring $(firstword $t),$(DOLLAR)),$(findstring $(word 2,$t),$(LPAREN)),$(findstring $(lastword $t),$(RPAREN))),a,$()))
+is_var_def = $(let t,$(call separate,$1,$(CHAR_COPY)),$(if $(and $(findstring $(firstword $t),$(DOLLAR)),$(findstring $(word 2,$t),$(LPAREN)),$(findstring $(lastword $t),$(RPAREN))),a,$()))
 
 var_def_macro = $(if $(is_var_def),variable definition,not a variable definition)
 

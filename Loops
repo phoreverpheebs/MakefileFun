@@ -7,12 +7,10 @@ include Comparisons
 COMMA = ,
 
 function_builder = $(eval $1=$2)
-run_lambda = $(call function_builder,run_lambda_temp,$1)$(run_lambda_temp)
+lambda = $(call function_builder,run_lambda_temp,$1)$(run_lambda_temp)
 
 # while ($1) do $2
-while = $(if $(call run_lambda,$1),$(eval $2)$(while),)
+while = $(if $(call lambda,$1),$(eval $2)$(while),)
 
-all:
-ifeq ($(firstword $(MAKEFILE_LIST)),Loops)
-	$(eval i:=0)$(call while,$$(call lt,$$(call ++,i),5),$$(info $$i))
-endif
+# for ($1; $2; $3) do $4
+for = $(if $1,$(call lambda,$1)$(call for,,$2,$3,$4),$(if $(call lambda,$2),$(for))
